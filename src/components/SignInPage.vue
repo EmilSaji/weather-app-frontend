@@ -33,10 +33,14 @@ import { useQuery } from "@vue/apollo-composable";
 import { ref } from "vue";
 import { gql } from "graphql-tag";
 import Swal from 'sweetalert2';
+import { useStore } from 'vuex';
+
 
 
 export default {
   setup() {
+    const store = useStore();
+    
     const email = ref("");
     const password = ref("");
     let userId = ref("");
@@ -58,6 +62,7 @@ export default {
           }
         );
         userId = result.value.loginUser.id;
+        store.commit('updateUser', result.value.loginUser);
         console.log(userId);
       } catch (error) {
         Swal.fire({
