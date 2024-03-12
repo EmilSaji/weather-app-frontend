@@ -40,20 +40,61 @@
 </template>
 
 <script>
+import { ref } from "vue";
+import { useMutation } from "@vue/apollo-composable";
+import gql from "graphql-tag";
+
 export default {
-  data() {
-    return {
-      username: "",
-      email: "",
-      password: "",
-      isAccountCreated: false,
+  setup() {
+    const username = ref("");
+    const email = ref("");
+    const password = ref("");
+    const isAccountCreated = ref(false);
+
+    const ADD_USER = gql`
+      mutation addUser(
+        $username: String!
+        $password: String!
+        $email: String!
+        $created_at: String!
+      ) {
+        addUser(
+          username: $username
+          password: $password
+          email: $email
+          created_at: $created_at
+        ) {
+          id
+          username
+          email
+        }
+      }
+    `;
+
+    const { mutate: addUser } = useMutation(ADD_USER);
+
+    const createAccount = async () => {
+      try {
+        isAccountCreated.value = true;
+        await addUser({
+          username: username.value,
+          password: password.value,
+          email: email.value,
+          created_at: new Date().toISOString(),
+        });
+      } catch (error) {
+        console.error("An error occurred while creating the account:", error);
+        isAccountCreated.value = false;
+      }
     };
-  },
-  methods: {
-    createAccount() {
-      this.isAccountCreated = true;
-      console.log("Logging in...", this.email, this.password);
-    },
+
+    return {
+      username,
+      email,
+      password,
+      isAccountCreated,
+      createAccount,
+    };
   },
 };
 </script>
