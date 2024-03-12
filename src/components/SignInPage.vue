@@ -29,17 +29,50 @@
 </template>
 
 <script>
+import { useQuery } from "@vue/apollo-composable";
+import { ref } from "vue";
+import { gql } from "graphql-tag";
+import Swal from 'sweetalert2';
+
+
 export default {
-  data() {
-    return {
-      email: "",
-      password: "",
+  setup() {
+    const email = ref("");
+    const password = ref("");
+    let userId = ref("");
+
+    const login = async () => {
+      try {
+        const { result } = useQuery(
+          gql`
+            query loginUser($email: String!, $password: String!) {
+              loginUser(email: $email, password: $password) {
+                id
+                username
+              }
+            }
+          `,
+          {
+            email: email.value,
+            password: password.value,
+          }
+        );
+        userId = result.value.loginUser.id;
+        console.log(userId);
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry...',
+          text: error,
+        });
+      }
     };
-  },
-  methods: {
-    login() {
-      console.log("Logging in...", this.email, this.password);
-    },
+
+    return {
+      email,
+      password,
+      login,
+    };
   },
 };
 </script>

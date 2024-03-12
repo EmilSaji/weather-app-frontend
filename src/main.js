@@ -8,6 +8,9 @@ import App from './App.vue'
 import SignInPage from './components/SignInPage.vue'
 import SignUpPage from './components/SignUpPage.vue'
 
+import { provideApolloClient } from '@vue/apollo-composable';
+
+
 const routes = [
   { path: '/signin', component: SignInPage },
   { path: '/signup', component: SignUpPage }
@@ -22,6 +25,9 @@ const apolloClient = new ApolloClient({
   uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache(),
 });
+
+provideApolloClient(apolloClient);
+
 
 const app = createApp(App)
 app.provide(DefaultApolloClient, apolloClient);

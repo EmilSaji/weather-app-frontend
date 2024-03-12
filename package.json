@@ -12,6 +12,7 @@
     "@vue/apollo-composable": "^4.0.2",
     "core-js": "^3.8.3",
     "graphql": "^16.8.1",
+    "sweetalert2": "^11.10.6",
     "vue": "^3.2.13",
     "vue-router": "^4.3.0"
   },

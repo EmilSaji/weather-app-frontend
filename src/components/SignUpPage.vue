@@ -43,6 +43,8 @@
 import { ref } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
+import Swal from 'sweetalert2';
+
 
 export default {
   setup() {
@@ -82,8 +84,17 @@ export default {
           email: email.value,
           created_at: new Date().toISOString(),
         });
+        Swal.fire({
+          icon: 'success',
+          title: 'Done',
+          text: "Account Created Successfully",
+        });
       } catch (error) {
-        console.error("An error occurred while creating the account:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Sorry...',
+          text: error,
+        });
         isAccountCreated.value = false;
       }
     };
