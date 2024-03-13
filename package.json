@@ -10,6 +10,7 @@
   "dependencies": {
     "@apollo/client": "^3.9.6",
     "@vue/apollo-composable": "^4.0.2",
+    "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "graphql": "^16.8.1",
     "sweetalert2": "^11.10.6",

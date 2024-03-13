@@ -53,6 +53,7 @@ import { ref } from "vue";
 import { gql } from "graphql-tag";
 import Swal from "sweetalert2";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
@@ -60,6 +61,7 @@ export default {
     const email = ref("");
     const password = ref("");
     let userId = ref("");
+    const router = useRouter();
 
     const login = async () => {
       try {
@@ -77,9 +79,9 @@ export default {
             password: password.value,
           }
         );
-        userId = result.value.loginUser.id;
+        userId.value = result.value.loginUser.id;
         store.commit("updateUser", result.value.loginUser);
-        console.log(userId);
+        router.push("/homepage");
       } catch (error) {
         Swal.fire({
           icon: "error",
