@@ -12,23 +12,23 @@
     </router-link>
   </div>
   <div class="container mx-auto p-4">
-    <main class="container text-black">
-      <div class="pt-4 mb-8 flex justify-center">
-        <div class="max-w-xs w-full">
-          <input
-            type="text"
-            v-model="searchQuery"
-            placeholder="Search for a city or state"
-            class="py-2 px-4 w-full bg-transparent border-b focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]"
-          />
-          <div v-for="(result, index) in searchResults" :key="index">
-            <button @click="selectResult(result)">
-              <p>{{ result.name }}, {{ result.country }}</p>
-            </button>
+      <main class="container text-black">
+        <div class="pt-4 mb-8 flex justify-center">
+          <div class="max-w-xs w-full">
+            <input
+              type="text"
+              v-model="searchQuery"
+              placeholder="Search for a city or state"
+              class="py-2 px-4 w-full bg-transparent border-b focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]"
+            />
+            <div v-for="(result, index) in searchResults" :key="index">
+              <button @click="selectResult(result)">
+                <p>{{ result.name }}, {{ result.country }}</p>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
   </div>
 </template>
 
@@ -36,8 +36,7 @@
 import { useStore } from "vuex";
 import { ref, watch } from "vue";
 import axios from "axios";
-import { onMounted } from 'vue';
-// import { toRaw } from "vue";
+import { onMounted } from "vue";
 
 export default {
   setup() {
@@ -60,9 +59,10 @@ export default {
 
     const getLocation = () => {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.getCurrentPosition(async (position) => {
           cuurentLatitude.value = position.coords.latitude;
           currentLongitude.value = position.coords.longitude;
+          await getWeatherData();
         });
       } else {
         console.log("Geolocation is not supported by this browser.");
@@ -80,6 +80,17 @@ export default {
       }
     });
 
+    const getWeatherData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${cuurentLatitude.value}&lon=${currentLongitude.value}&appid=${apiKey}`
+        );
+        console.log(response.data);
+      } catch (error) {
+        console.error(`Error: ${error}`);
+      }
+    };
+
     return {
       user,
       logout,
@@ -89,6 +100,7 @@ export default {
       selectedResult,
       cuurentLatitude,
       currentLongitude,
+      getWeatherData,
     };
   },
 };
