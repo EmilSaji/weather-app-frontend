@@ -1,40 +1,55 @@
 <template>
-  <div class="login-container">
-    <h1>Login</h1>
-    <form @submit.prevent="createAccount">
-      <label for="email">Username:</label>
+  <div class="flex flex-col items-center p-5">
+    <h1 class="text-2xl font-bold mb-5">Login</h1>
+    <form @submit.prevent="createAccount" class="w-full max-w-xs">
+      <label for="username" class="block text-gray-700 text-sm font-bold mb-2"
+        >Username:</label
+      >
       <input
         type="name"
         id="username"
         v-model="username"
         required
         :disabled="isAccountCreated"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-3"
       />
-      <label for="email">Email:</label>
+      <label for="email" class="block text-gray-700 text-sm font-bold mb-2"
+        >Email:</label
+      >
       <input
         type="email"
         id="email"
         v-model="email"
         required
         :disabled="isAccountCreated"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-3"
       />
-      <label for="password">Password:</label>
+      <label for="password" class="block text-gray-700 text-sm font-bold mb-2"
+        >Password:</label
+      >
       <input
         type="password"
         id="password"
         v-model="password"
         required
         :disabled="isAccountCreated"
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-3"
       />
-      <div
-        class="button-container-login"
-        v-if="isAccountCreated ? false : true"
-      >
-        <button type="submit">Create Account</button>
+      <div class="text-center mt-3" v-if="isAccountCreated ? false : true">
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Create Account
+        </button>
       </div>
     </form>
     <router-link to="/signin" v-if="isAccountCreated">
-      <button class="button-container-newAccount">Sign In</button>
+      <button
+        class="mt-3 text-center py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline"
+      >
+        Go to Sign In
+      </button>
     </router-link>
   </div>
 </template>
@@ -43,8 +58,7 @@
 import { ref } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import gql from "graphql-tag";
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 export default {
   setup() {
@@ -85,15 +99,15 @@ export default {
           created_at: new Date().toISOString(),
         });
         Swal.fire({
-          icon: 'success',
-          title: 'Done',
+          icon: "success",
+          title: "Done",
           text: "Account Created Successfully",
         });
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Sorry...',
-          text: error,
+          icon: "error",
+          title: "Sorry...",
+          text: "Failed to create Account",
         });
         isAccountCreated.value = false;
       }
@@ -109,49 +123,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-label {
-  margin-bottom: 5px;
-  display: block;
-}
-
-input[type="name"],
-input[type="email"],
-input[type="password"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  width: 200px;
-}
-
-.button-container-login {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.button-container-newAccount {
-  margin-top: 10px;
-  text-align: center;
-  padding: 10px 20px;
-  background-color: #00b3ffeb;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button[type="submit"] {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-</style>

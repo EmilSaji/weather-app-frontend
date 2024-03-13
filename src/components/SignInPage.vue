@@ -1,28 +1,47 @@
 <template>
-  <div class="login-container">
-    <h1>Login</h1>
-    <form @submit.prevent="login">
-      <label for="email">Email:</label>
-      <input type="email" id="email" v-model="email" required />
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="password" required />
-      <div class="button-container-login">
-        <button type="submit">Login</button>
+  <div class="flex flex-col items-center p-5">
+    <h1 class="text-2xl font-bold mb-5">Login</h1>
+    <form
+      @submit.prevent="login"
+      class="w-full max-w-xs flex flex-col justify-center"
+    >
+      <label for="email" class="block text-gray-700 text-sm font-bold mb-2"
+        >Email:</label
+      >
+      <input
+        type="email"
+        id="email"
+        v-model="email"
+        required
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-3"
+      />
+      <label for="password" class="block text-gray-700 text-sm font-bold mb-2"
+        >Password:</label
+      >
+      <input
+        type="password"
+        id="password"
+        v-model="password"
+        required
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-3"
+      />
+      <div class="text-center mt-3">
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Login
+        </button>
       </div>
     </form>
-    <div
-      style="
-        margin-top: 1rem;
-        font-size: large;
-        font-weight: bold;
-        margin-bottom: 1rem;
-      "
-    >
-      OR
-    </div>
+    <div class="text-lg font-bold my-3">OR</div>
     <div>
       <router-link to="/signup">
-        <button class="button-container-newAccount">Create an Account</button>
+        <button
+          class="mt-3 text-center py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline"
+        >
+          Create an Account
+        </button>
       </router-link>
     </div>
   </div>
@@ -32,15 +51,12 @@
 import { useQuery } from "@vue/apollo-composable";
 import { ref } from "vue";
 import { gql } from "graphql-tag";
-import Swal from 'sweetalert2';
-import { useStore } from 'vuex';
-
-
+import Swal from "sweetalert2";
+import { useStore } from "vuex";
 
 export default {
   setup() {
     const store = useStore();
-    
     const email = ref("");
     const password = ref("");
     let userId = ref("");
@@ -62,13 +78,13 @@ export default {
           }
         );
         userId = result.value.loginUser.id;
-        store.commit('updateUser', result.value.loginUser);
+        store.commit("updateUser", result.value.loginUser);
         console.log(userId);
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Sorry...',
-          text: error,
+          icon: "error",
+          title: "Sorry...",
+          text: "Failed to Sign In, Please try again later",
         });
       }
     };
@@ -81,48 +97,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-label {
-  margin-bottom: 5px;
-  display: block;
-}
-
-input[type="email"],
-input[type="password"] {
-  padding: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-  width: 200px;
-}
-
-.button-container-login {
-  margin-top: 10px;
-  text-align: center;
-}
-
-.button-container-newAccount {
-  margin-top: 10px;
-  text-align: center;
-  padding: 10px 20px;
-  background-color: #00b3ffeb;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button[type="submit"] {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-</style>
