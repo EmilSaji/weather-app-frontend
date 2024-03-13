@@ -36,6 +36,7 @@
 import { useStore } from "vuex";
 import { ref, watch } from "vue";
 import axios from "axios";
+import { onMounted } from 'vue';
 // import { toRaw } from "vue";
 
 export default {
@@ -46,6 +47,8 @@ export default {
     const searchResults = ref([]);
     const selectedResult = ref(null);
     const apiKey = "c730a04e6fc23f790e2f3471f66d8214";
+    const cuurentLatitude = ref(null);
+    const currentLongitude = ref(null);
 
     const logout = () => {
       // Handle logout logic
@@ -53,8 +56,20 @@ export default {
 
     const selectResult = (result) => {
       selectedResult.value = result;
-      console.log(selectedResult.value);
     };
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          cuurentLatitude.value = position.coords.latitude;
+          currentLongitude.value = position.coords.longitude;
+        });
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+      }
+    };
+
+    onMounted(getLocation);
 
     watch(searchQuery, async (newQuery) => {
       if (newQuery) {
@@ -72,6 +87,8 @@ export default {
       searchResults,
       selectResult,
       selectedResult,
+      cuurentLatitude,
+      currentLongitude,
     };
   },
 };
