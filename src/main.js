@@ -27,6 +27,12 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  document.title = 'Weather App';
+  next();
+});
+
+
 const apolloClient = new ApolloClient({
   uri: "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
