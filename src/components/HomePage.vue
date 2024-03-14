@@ -1,29 +1,38 @@
 <template>
-  <div class="flex justify-between items-center bg-gray-200 p-4">
-    <div class="text-lg font-bold">{{ user.username }}</div>
-    <div class="text-3xl font-bold text-teal-500">Weather App</div>
-    <button
-      @click="showWeather(cuurentLatitude, currentLongitude)"
-      class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-600"
-    >
-      Get Current Weather
-    </button>
-    <button
-      @click="getUserLocations"
-      class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-      :class="disableShowLoc ? 'bg-blue-300' : 'hover:bg-blue-600'"
-      :disabled="disableShowLoc"
-    >
-      Show Saved Locations
-    </button>
-    <router-link to="/signin">
-      <button
-        @click="logout"
-        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-      >
-        Logout
-      </button>
-    </router-link>
+  <div class="bg-gray-200 p-4">
+    <div class="flex justify-between">
+      <div class="text-3xl font-bold text-teal-500">Weather App</div>
+      <div class="text-2xl font-bold">{{ user.username }}</div>
+    </div>
+    <div class="flex flex-col mt-6">
+      <div class="flex justify-center">
+        <button
+          @click="showWeather(cuurentLatitude, currentLongitude)"
+          class="bg-cyan-500 text-white font-bold py-2 px-4 rounded mb-2"
+        >
+          Current Location Weather
+        </button>
+      </div>
+      <div class="flex justify-center">
+        <button
+          @click="getUserLocations"
+          class="bg-blue-500 text-white font-bold py-2 px-4 rounded mb-2"
+          :class="disableShowLoc ? 'bg-blue-300' : 'hover:bg-blue-600'"
+          :disabled="disableShowLoc"
+        >
+          Show Saved Locations
+        </button>
+      </div>
+      <div class="flex justify-center">
+        <router-link to="/signin">
+          <button
+            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+          >
+            Logout
+          </button>
+        </router-link>
+      </div>
+    </div>
   </div>
   <div class="container mx-auto p-4">
     <main class="container text-black">
@@ -58,16 +67,11 @@
     </main>
     <div>
       <div class="flex flex-col">
-        <h3
-          class="flex justify-center text-lg"
-          v-if="savedLocations.length == 0 ? false : true"
-        >
+        <h3 class="text-lg" v-if="savedLocations.length > 0">
           Saved Locations
         </h3>
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div
-            class="mt-3 py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8"
-          >
+        <div class="-my-2 overflow-x-auto">
+          <div class="mt-3">
             <div
               class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"
             >
@@ -134,10 +138,6 @@ export default {
     const disableShowLoc = ref(false);
 
     const router = useRouter();
-
-    const logout = () => {
-      // Handle logout logic
-    };
 
     const selectResult = (result) => {
       selectedResult.value = result;
@@ -303,7 +303,6 @@ export default {
 
     return {
       user,
-      logout,
       searchQuery,
       searchResults,
       selectResult,

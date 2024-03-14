@@ -1,33 +1,93 @@
 <template>
-  <div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div
       v-if="weatherData"
-      class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4"
+      class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
     >
-      <div>
-        <div class="text-xl font-medium text-black">
-          Weather in {{ weatherData.name }}
+      <!-- Current Weather Card -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <img
+                :src="`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`"
+                alt="Weather icon"
+                class="h-10 w-10"
+              />
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-lg font-medium text-gray-500 truncate">
+                  Weather in {{ weatherData.name }}
+                </dt>
+                <dd>
+                  <div class="text-sm font-medium text-gray-900 mt-4">
+                    {{ weatherData.weather[0].main }}
+                  </div>
+                  <div class="text-sm font-medium text-gray-900">
+                    Temperature:
+                    {{ (weatherData.main.temp - 273).toFixed(1) }}°C
+                  </div>
+                  <div class="text-sm font-medium text-gray-900">
+                    Feels Like:
+                    {{ (weatherData.main.feels_like - 273).toFixed(1) }}°C
+                  </div>
+                  <div class="text-sm font-medium text-gray-900">
+                    Humidity: {{ weatherData.main.humidity }}%
+                  </div>
+                  <div class="text-sm font-medium text-gray-900">
+                    Wind Speed: {{ weatherData.wind.speed }} m/s
+                  </div>
+                </dd>
+              </dl>
+            </div>
+          </div>
         </div>
-        <p class="text-gray-500">{{ weatherData.weather[0].description }}</p>
-        <p class="text-gray-500">
-          Temperature: {{ (weatherData.main.temp - 273).toFixed(1) }}°C
-        </p>
-        <p class="text-gray-500">
-          Feels Like: {{ (weatherData.main.feels_like - 273).toFixed(1) }}°C
-        </p>
-        <p class="text-gray-500">Humidity: {{ weatherData.main.humidity }}%</p>
-        <p class="text-gray-500">
-          Wind Speed: {{ weatherData.wind.speed }} m/s
-        </p>
+      </div>
+
+      <!-- 5-Day Forecast -->
+      <div
+        v-if="forecastData"
+        class="bg-white overflow-hidden shadow rounded-lg"
+      >
+        <div class="p-5">
+          <h3 class="text-lg font-medium text-gray-500 mb-4">5-Day Forecast</h3>
+          <div class="grid grid-cols-1 gap-2">
+            <div
+              v-for="(forecast, index) in forecastData.list"
+              :key="index"
+              class="bg-gray-100 rounded-lg p-2"
+            >
+              <div class="flex justify-between">
+                <div class="text-sm font-medium text-gray-900">
+                  {{ forecast.dt_txt }}
+                </div>
+                <div class="text-sm font-medium text-gray-900">
+                  {{ (forecast.main.temp - 273).toFixed(1) }}°C
+                </div>
+              </div>
+              <div class="text-xs text-gray-600">
+                <img
+                  :src="`http://openweathermap.org/img/w/${forecast.weather[0].icon}.png`"
+                  alt="Weather icon"
+                  class="h-10 w-10"
+                />
+                {{ forecast.weather[0].main }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button
+          @click="goBack"
+          class="mt-5 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Return To Home
+        </button>
       </div>
     </div>
     <div v-else>Loading...</div>
-    <button
-      @click="goBack"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-    >
-      Back
-    </button>
   </div>
 </template>
 
@@ -40,6 +100,7 @@ export default {
   setup() {
     const store = useStore();
     const weatherData = ref(null);
+    const forecastData = ref(null);
 
     const getWeatherData = async () => {
       try {
@@ -48,19 +109,13 @@ export default {
           `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
         );
 
-        // // cal current date & time
-        // const localOffset = new Date().getTimezoneOffset() * 60000;
-        // const utc = response.data.dt * 1000 + localOffset;
-        // response.data.currentTime = utc + 1000 * response.data.timezone_offset;
-
-        // // cal hourly weather offset
-        // response.data.hourly.forEach((hour) => {
-        //   const utc = hour.dt * 1000 + localOffset;
-        //   hour.currentTime = utc + 1000 * response.data.timezone_offset;
-        // });
+        const forecastResponse = await axios.get(
+          `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}`
+        );
 
         weatherData.value = response.data;
-        console.log(weatherData.value);
+        forecastData.value = forecastResponse.data;
+        console.log(forecastData.value);
       } catch (err) {
         console.log(err);
       }
@@ -72,7 +127,7 @@ export default {
       window.location.href = "/homePage";
     };
 
-    return { weatherData, goBack };
+    return { weatherData, goBack, forecastData };
   },
 };
 </script>
