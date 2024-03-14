@@ -65,6 +65,8 @@ http://localhost:8080/signin
 ## Project Structure
 ```
 src/: Contains the source code of the application.
+
+src/main.js: This file serves as the entry point of the application, where routes, store, and Apollo Client are set up. The default Apollo Client URI is also configured here.
 ```
 
 ## Support
