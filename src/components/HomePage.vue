@@ -24,13 +24,12 @@
         </button>
       </div>
       <div class="flex justify-center">
-        <router-link to="/signin">
-          <button
-            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-          >
-            Logout
-          </button>
-        </router-link>
+        <button
+          @click="goBack"
+          class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Logout
+        </button>
       </div>
     </div>
   </div>
@@ -301,6 +300,10 @@ export default {
       }
     };
 
+    const goBack = () => {
+      window.location.href = "/signin";
+    };
+
     return {
       user,
       searchQuery,
@@ -315,6 +318,7 @@ export default {
       disableShowLoc,
       addNewLocation,
       showWeather,
+      goBack,
     };
   },
 };
