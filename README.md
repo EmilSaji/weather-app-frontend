@@ -49,7 +49,7 @@ npm install
 ```
 
 ## Backend Setup:
-Before running the frontend, you need to set up the backend. Please refer to the backend’s README file for detailed instructions on how to set up and run the backend server. The backend repository can be found at: Weather App Backend.
+Before running the frontend, you need to set up the backend. Please refer to the backend’s README file for detailed instructions on how to set up and run the backend server. The backend repository can be found at: https://github.com/EmilSaji/weather-app-backend
 
 ## Start Development Server:
 ```
