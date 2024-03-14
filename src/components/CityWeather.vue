@@ -60,7 +60,7 @@
             >
               <div class="flex justify-between">
                 <div class="text-sm font-medium text-gray-900">
-                  {{ forecast.dt_txt }}
+                  {{ formatDate(forecast.dt_txt) }}
                 </div>
                 <div class="text-sm font-medium text-gray-900">
                   {{ (forecast.main.temp - 273).toFixed(1) }}°C
@@ -127,7 +127,28 @@ export default {
       window.location.href = "/homePage";
     };
 
-    return { weatherData, goBack, forecastData };
+    function formatDate(dt_txt) {
+      let date = new Date(dt_txt);
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      let ampm = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      let strTime = hours + ":" + minutes + " " + ampm;
+      return (
+        date.getDate() +
+        "/" +
+        (date.getMonth() + 1) +
+        "/" +
+        date.getFullYear() +
+        "  " +
+        " - " +
+        strTime
+      );
+    }
+
+    return { weatherData, goBack, forecastData, formatDate };
   },
 };
 </script>
