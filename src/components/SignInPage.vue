@@ -86,7 +86,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "Sorry...",
-          text: "Failed to Sign In, Please try again later",
+          text: "Failed to Sign In, Please try again!",
         });
       }
     };

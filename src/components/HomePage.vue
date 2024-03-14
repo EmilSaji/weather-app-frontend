@@ -3,6 +3,12 @@
     <div class="text-lg font-bold">{{ user.username }}</div>
     <div class="text-3xl font-bold text-teal-500">Weather App</div>
     <button
+      @click="showWeather(cuurentLatitude, currentLongitude)"
+      class="bg-cyan-500 text-white font-bold py-2 px-4 rounded hover:bg-cyan-600"
+    >
+      Get Current Weather
+    </button>
+    <button
       @click="getUserLocations"
       class="bg-blue-500 text-white font-bold py-2 px-4 rounded"
       :class="disableShowLoc ? 'bg-blue-300' : 'hover:bg-blue-600'"
@@ -77,6 +83,9 @@
                     <td>
                       <button
                         class="bg-green-200 text-black py-2 px-4 rounded hover:bg-green-500 hover:text-white"
+                        @click="
+                          showWeather(location.latitude, location.longitude)
+                        "
                       >
                         Show Weather
                       </button>
@@ -109,6 +118,7 @@ import { useQuery } from "@vue/apollo-composable";
 import { gql } from "graphql-tag";
 import { useMutation } from "@vue/apollo-composable";
 import Swal from "sweetalert2";
+import { useRouter } from "vue-router";
 
 export default {
   setup() {
@@ -123,6 +133,8 @@ export default {
     const savedLocations = ref([]);
     const disableShowLoc = ref(false);
 
+    const router = useRouter();
+
     const logout = () => {
       // Handle logout logic
     };
@@ -136,7 +148,6 @@ export default {
         navigator.geolocation.getCurrentPosition(async (position) => {
           cuurentLatitude.value = position.coords.latitude;
           currentLongitude.value = position.coords.longitude;
-          await getWeatherData();
         });
       } else {
         console.log("Geolocation is not supported by this browser.");
@@ -151,17 +162,6 @@ export default {
         searchResults.value = response.data;
       }
     });
-
-    const getWeatherData = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${cuurentLatitude.value}&lon=${currentLongitude.value}&appid=${apiKey}`
-        );
-        console.log(response.data);
-      } catch (error) {
-        console.error(`Error: ${error}`);
-      }
-    };
 
     const getUserLocations = async () => {
       try {
@@ -189,7 +189,6 @@ export default {
         });
 
         savedLocations.value = Array.from(savedLocationsMap.values());
-        console.log(savedLocations.value);
       } catch (error) {
         console.log(error);
       }
@@ -276,8 +275,8 @@ export default {
           {
             id: response.data.addLocation.id,
             name: response.data.addLocation.name,
-            lat: response.data.addLocation.latitude,
-            lon: response.data.addLocation.longitude,
+            latitude: response.data.addLocation.latitude,
+            longitude: response.data.addLocation.longitude,
           },
         ];
       } catch (error) {
@@ -286,6 +285,19 @@ export default {
           title: "Sorry...",
           text: "Failed to add location",
         });
+      }
+    };
+
+    const showWeather = async (latitude, longitude) => {
+      try {
+        store.commit("updateLocation", {
+          latitude: latitude,
+          longitude: longitude,
+          apiKey: apiKey,
+        });
+        router.push("/cityWeather");
+      } catch (error) {
+        console.log(error);
       }
     };
 
@@ -298,12 +310,12 @@ export default {
       selectedResult,
       cuurentLatitude,
       currentLongitude,
-      getWeatherData,
       getUserLocations,
       savedLocations,
       deleteLocationById,
       disableShowLoc,
       addNewLocation,
+      showWeather,
     };
   },
 };

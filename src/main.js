@@ -9,6 +9,7 @@ import App from "./App.vue";
 import SignInPage from "./components/SignInPage.vue";
 import SignUpPage from "./components/SignUpPage.vue";
 import HomePage from "./components/HomePage.vue";
+import CityWeather from "./components/CityWeather.vue";
 
 import { provideApolloClient } from "@vue/apollo-composable";
 
@@ -18,6 +19,7 @@ const routes = [
   { path: "/signin", component: SignInPage },
   { path: "/signup", component: SignUpPage },
   { path: "/homePage", component: HomePage },
+  { path: "/cityWeather", component: CityWeather },
 ];
 
 const router = createRouter({
